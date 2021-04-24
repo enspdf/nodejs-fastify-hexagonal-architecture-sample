@@ -1,0 +1,41 @@
+{
+    "name": "backend-full-stack-architecture",
+    "version": "1.0.0",
+    "main": "dist/index.js",
+    "license": "MIT",
+    "scripts": {
+        "build": "tsc && cp src/.env.production dist/.env",
+        "build-dev": "tsc",
+        "eslint": "eslint",
+        "lint": "tsc --noEmit && eslint --fix 'src/**/*.{js,ts}'",
+        "jest": "jest",
+        "ts-node": "ts-node",
+        "dev": "yarn build-dev && env-cmd -f src/.env.development nodemon",
+        "start": "env-cmd -f dist/.env ts-node dist/index.js",
+        "test": "yarn lint && env-cmd -f src/.env.test yarn jest"
+    },
+    "dependencies": {
+        "env-cmd": "^10.1.0",
+        "fastify": "^3.15.0",
+        "module-alias": "^2.2.2",
+        "ramda": "^0.27.1",
+        "ts-node": "^9.1.1"
+    },
+    "devDependencies": {
+        "@babel/preset-typescript": "^7.13.0",
+        "@types/jest": "^26.0.22",
+        "@types/module-alias": "^2.0.0",
+        "@types/ramda": "^0.27.40",
+        "@typescript-eslint/eslint-plugin": "^4.22.0",
+        "@typescript-eslint/parser": "^4.22.0",
+        "eslint": "^7.24.0",
+        "eslint-config-prettier": "^8.2.0",
+        "eslint-plugin-prettier": "^3.4.0",
+        "jest": "^26.6.3",
+        "nodemon": "^2.0.7",
+        "pino-pretty": "^4.7.1",
+        "prettier": "^2.2.1",
+        "ts-jest": "^26.5.5",
+        "typescript": "^4.2.4"
+    }
+}
