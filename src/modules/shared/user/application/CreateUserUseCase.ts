@@ -1,20 +1,23 @@
-export type User = Record<string, unknown>
-export type UserOptions = Record<string, unknown>
-export type CreateUser = (userOptions: UserOptions) => Promise<User | null>
+import { User, UserInputOptions, UserEntityOptions } from '../domain/User'
+import { UserId } from '../domain/value-objects/UserId'
+
+export type CreateUser = (userOptions: UserEntityOptions) => Promise<User | null>
 
 export async function createUserUseCase(
     createUser: CreateUser,
-    userOptions: UserOptions
+    userOptions: Partial<UserInputOptions>
 ): Promise<User | { errors: Record<string, string> }> {
-    const user = await createUser(userOptions)
+    const id = new UserId(userOptions.id)
 
-    return user ?? { errors: [] }
+    const user = await createUser({ id })
+
+    return user ?? { errors: {} }
 }
 
 export function createUserUseCaseFactory(
     createUser: CreateUser
-): (userOptions: UserOptions) => ReturnType<typeof createUserUseCase> {
-    return async (userOptions: UserOptions): ReturnType<typeof createUserUseCase> => {
+): (userOptions: Partial<UserInputOptions>) => ReturnType<typeof createUserUseCase> {
+    return async (userOptions: Partial<UserInputOptions>): ReturnType<typeof createUserUseCase> => {
         return createUserUseCase(createUser, userOptions)
     }
 }
