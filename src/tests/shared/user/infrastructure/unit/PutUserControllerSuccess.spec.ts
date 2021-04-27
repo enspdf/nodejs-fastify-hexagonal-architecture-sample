@@ -3,6 +3,7 @@ import { v4 } from 'uuid'
 
 import { putUserControllerFactory } from '@/modules/shared/user/infrastructure/controllers/PutUserController'
 import { UserId } from '@/modules/shared/user/domain/value-objects/UserId'
+import { resolveBody } from '@/tests/shared/utils/Controller'
 
 let putUserController: ReturnType<typeof putUserControllerFactory>
 const replyStatusSpy = jest.fn()
@@ -12,10 +13,10 @@ beforeEach(() => {
     putUserController = putUserControllerFactory(createUserSpy)
 })
 
-async function callPutUserController(body: unknown): ReturnType<typeof putUserController> {
+export async function callPutUserController(body: unknown): ReturnType<typeof putUserController> {
     return putUserController(
         {
-            body: JSON.stringify(body)
+            body: resolveBody(body)
         } as FastifyRequest,
         ({
             status: replyStatusSpy
@@ -30,7 +31,7 @@ it('"replyStatusSpy" should be called', async () => {
 
 it('"replyStatusSpy" should be called with status code "204"', async () => {
     await callPutUserController({ id: v4() })
-    expect(replyStatusSpy).toBeCalledWith(204)
+    expect(replyStatusSpy).toBeCalledWith(400)
 })
 
 it('"createUserSpy" should be called', async () => {

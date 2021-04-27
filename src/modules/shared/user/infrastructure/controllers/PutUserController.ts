@@ -1,6 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 
 import { CreateUser, createUserUseCaseFactory } from '../../application/CreateUserUseCase'
+import { User } from '../../domain/User'
 import { requestBodyParser } from '../fastify/RequestBodyParser'
 
 export async function putUserController(
@@ -12,9 +13,14 @@ export async function putUserController(
         request: FastifyRequest
         reply: FastifyReply
     }
-): Promise<void> {
+): Promise<void | { errors: Record<string, string> }> {
     const createUserUseCase = createUserUseCaseFactory(createUser)
-    await createUserUseCase(request.json ?? {})
+    const result = await createUserUseCase(request.json ?? {})
+
+    if (!(result instanceof User)) {
+        reply.status(400)
+        return reply
+    }
 
     reply.status(204)
 }
